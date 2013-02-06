@@ -1,7 +1,7 @@
 #import "ViewController.h"
 #import "SoundRecoder.h"
 
-#define GOOGLE_API_URL @"https://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=%@"
+#define GOOGLE_API_URL @"https://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=%@&maxresults=%d&pfilter=0"
 
 @interface ViewController () <SoundRecoderDelegate>{
 	IBOutlet UILabel *_resulfField;
@@ -38,7 +38,7 @@
 
 -(void)soundRecoderDidFinishRecording:(SoundRecoder *)recoder{
 	recoder.delegate = nil;
-	[self performSelectorInBackground:@selector(recognitionRequest) withObject:recoder.savedPath];
+	[self performSelectorInBackground:@selector(makeRecognitionRequest:) withObject:recoder.savedPath];
 }
 
 -(void)recognitionDidFinish:(NSArray*)results{
@@ -62,7 +62,7 @@
 	
 	NSArray *langList = @[@"ja-JP",@"en-US"];
 	NSString *lang = langList[_langSelection.selectedSegmentIndex];
-	NSString *url = [NSString stringWithFormat:GOOGLE_API_URL,lang];
+	NSString *url = [NSString stringWithFormat:GOOGLE_API_URL,lang,3];
 	NSLog(@"URL: %@",url);
 	
 	NSMutableURLRequest *rq = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
